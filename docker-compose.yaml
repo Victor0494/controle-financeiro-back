@@ -16,16 +16,22 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
 
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
   app:
     build: .
-
     container_name: finance-api
 
     ports:
       - "8080:8080"
 
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
 
     environment:
       DB_URL: jdbc:mysql://mysql:3306/mydatabase
