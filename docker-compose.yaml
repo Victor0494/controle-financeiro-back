@@ -5,10 +5,10 @@ services:
     container_name: mysql
 
     environment:
-      MYSQL_DATABASE: mydatabase
-      MYSQL_USER: myuser
-      MYSQL_PASSWORD: mypassword
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 
     ports:
       - "3306:3306"
@@ -34,9 +34,9 @@ services:
         condition: service_healthy
 
     environment:
-      DB_URL: jdbc:mysql://mysql:3306/mydatabase
-      DB_USER: myuser
-      DB_PASSWORD: mypassword
+      DB_URL: ${DB_URL}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
 
 volumes:
   mysql_data:
