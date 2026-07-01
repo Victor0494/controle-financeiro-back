@@ -21,12 +21,15 @@ public class BillService {
 
     private final BillRepository billRepository;
 
+    private final BalanceService balanceService;
+
     private final BillMapper billMapper;
 
-    public BillService(BillRepository billRepository, BillMapper billMapper, MeterRegistry registry) {
+    public BillService(BillRepository billRepository, BillMapper billMapper, MeterRegistry registry, BalanceService balanceService) {
         this.paymentCounter =  Counter.builder("get_bill_completed").description("Total completed get bills").register(registry);
         this.billRepository = billRepository;
         this.billMapper = billMapper;
+        this.balanceService = balanceService;
     }
 
     public BillDTO createBill(BillDTO billDTO) {
@@ -34,7 +37,7 @@ public class BillService {
         return billMapper.toDTO(billRepository.save(entity));
     }
 
-    @Cacheable("bills")
+    //@Cacheable("bills")
     public List<BillDTO> getBillByDueDate(LocalDate dueDate) {
         LocalDate startDate = dueDate.withDayOfMonth(1);
         LocalDate endDate = dueDate.withDayOfMonth(dueDate.lengthOfMonth());
@@ -50,6 +53,10 @@ public class BillService {
 
         if(billEntity.isEmpty()) {
             throw new EntityNotFoundException();
+        }
+
+        if(!payed) {
+            balanceService.updateBalance(billEntity.get().getBillValue());
         }
 
         billEntity.get().setPaid(payed);

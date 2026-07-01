@@ -2,7 +2,6 @@ package com.controle.financeiro.controller;
 
 import com.controle.financeiro.model.dto.BillDTO;
 import com.controle.financeiro.service.BillService;
-import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,7 @@ public class BillController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateBillInfo(@PathVariable("id") Long id, @RequestParam(name = "payed") boolean payed) {
+    public ResponseEntity<?> updateBillInfo(@PathVariable Long id, @RequestParam(name = "payed") boolean payed) {
         billService.updateBillInfo(id, payed);
         return ResponseEntity.ok().build();
     }

@@ -21,7 +21,7 @@ public class BalanceService {
 
     private final BalanceMapper balanceMapper;
 
-    @Cacheable("bills")
+    //@Cacheable("balance")
     public BalanceDTO getBalance(int year, int month) {
         MonthBalanceEntity balanceEntity = balanceRepository.getByYearAndMonth(year, month);
         return balanceMapper.toDTO(balanceEntity);
@@ -53,5 +53,17 @@ public class BalanceService {
                 .build();
         balanceRepository.save(monthBalanceEntity);
         return balanceMapper.toDTO(monthBalanceEntity);
+    }
+
+    public void updateBalance(BigDecimal value) {
+        LocalDate today = LocalDate.now();
+
+        MonthBalanceEntity balanceEntity = balanceRepository.findByYearAndMonth(today.getYear(), today.getMonthValue());
+
+        if(!ObjectUtils.isEmpty(balanceEntity)) {
+            balanceEntity.setBalance(balanceEntity.getBalance().add(value));
+            balanceEntity.setMoneyOutput(balanceEntity.getMoneyOutput().subtract(value));
+        }
+        balanceRepository.save(balanceEntity);
     }
 }
