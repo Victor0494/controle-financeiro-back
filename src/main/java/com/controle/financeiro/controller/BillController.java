@@ -34,4 +34,10 @@ public class BillController {
         billService.updateBillInfo(id, payed);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteBill(@PathVariable Long id) {
+        billService.deleteBillById(id);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -5,6 +5,7 @@ import com.controle.financeiro.model.dto.BalanceDTO;
 import com.controle.financeiro.model.entities.MonthBalanceEntity;
 import com.controle.financeiro.repository.BalanceRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -21,12 +22,13 @@ public class BalanceService {
 
     private final BalanceMapper balanceMapper;
 
-    //@Cacheable("balance")
+    @Cacheable("balance")
     public BalanceDTO getBalance(int year, int month) {
         MonthBalanceEntity balanceEntity = balanceRepository.getByYearAndMonth(year, month);
         return balanceMapper.toDTO(balanceEntity);
     }
 
+    @CacheEvict(value = "balance", allEntries = true)
     public BalanceDTO updateMonthBalance(BigDecimal value, String type) {
         LocalDate today = LocalDate.now();
 
@@ -55,6 +57,7 @@ public class BalanceService {
         return balanceMapper.toDTO(monthBalanceEntity);
     }
 
+    @CacheEvict(value = "balance", allEntries = true)
     public void updateBalance(BigDecimal value) {
         LocalDate today = LocalDate.now();
 

@@ -7,6 +7,7 @@ import com.controle.financeiro.repository.BillRepository;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -32,12 +33,13 @@ public class BillService {
         this.balanceService = balanceService;
     }
 
+    @CacheEvict(value = "bills", allEntries = true)
     public BillDTO createBill(BillDTO billDTO) {
         BillEntity entity = billMapper.toEntity(billDTO);
         return billMapper.toDTO(billRepository.save(entity));
     }
 
-    //@Cacheable("bills")
+    @Cacheable("bills")
     public List<BillDTO> getBillByDueDate(LocalDate dueDate) {
         LocalDate startDate = dueDate.withDayOfMonth(1);
         LocalDate endDate = dueDate.withDayOfMonth(dueDate.lengthOfMonth());
@@ -48,6 +50,7 @@ public class BillService {
         return billEntityList.stream().map(billMapper::toDTO).toList();
     }
 
+    @CacheEvict(value = "bills", allEntries = true)
     public void updateBillInfo(Long id, boolean payed) {
         Optional<BillEntity> billEntity = billRepository.findById(id);
 
@@ -62,5 +65,10 @@ public class BillService {
         billEntity.get().setPaid(payed);
 
         billRepository.save(billEntity.get());
+    }
+
+    @CacheEvict(value = "bills", allEntries = true)
+    public void deleteBillById(Long id) {
+        billRepository.deleteById(id);
     }
 }
