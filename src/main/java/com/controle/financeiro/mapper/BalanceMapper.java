@@ -3,6 +3,9 @@ package com.controle.financeiro.mapper;
 import com.controle.financeiro.model.dto.BalanceDTO;
 import com.controle.financeiro.model.entities.MonthBalanceEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
+
+import java.util.Objects;
 
 @Component
 public class BalanceMapper {

@@ -16,6 +16,8 @@ management:
     web:
       exposure:
         include: health,info,prometheus
+server:
+  port: 8082
 
   endpoint:
     health:
@@ -27,3 +29,9 @@ management:
     distribution:
       percentiles-histogram:
         http.server.requests: true
+
+jwt:
+  public:
+    key: file:key/app.pub
+  private:
+    key: file:key/private.key

@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/v1/balance")
-@CrossOrigin("*")
+//@CrossOrigin("*")
 @RequiredArgsConstructor
 public class BalanceController {
 

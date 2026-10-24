@@ -25,7 +25,7 @@ public class BalanceService {
     @Cacheable("balance")
     public BalanceDTO getBalance(int year, int month) {
         MonthBalanceEntity balanceEntity = balanceRepository.getByYearAndMonth(year, month);
-        return balanceMapper.toDTO(balanceEntity);
+        return balanceMapper.toDTO(ObjectUtils.isEmpty(balanceEntity) ? MonthBalanceEntity.builder().build() : balanceEntity);
     }
 
     @CacheEvict(value = "balance", allEntries = true)
