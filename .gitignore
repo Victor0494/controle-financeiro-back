@@ -36,3 +36,6 @@ build/
 .env/*
 /docker/*
 /key/*
+
+backup-mydatabase.sql
+.env

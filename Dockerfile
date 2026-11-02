@@ -1,18 +1,10 @@
-FROM maven:3.9-eclipse-temurin-21 AS build
+FROM eclipse-temurin:21-alpine
 
 WORKDIR /app
 
-COPY pom.xml .
-COPY src ./src
+COPY target/financeiro-0.0.1-SNAPSHOT.jar /app/financeiro-0.0.1-SNAPSHOT.jar
+COPY key/ /app/key
 
-RUN mvn clean package -DskipTests
-
-FROM eclipse-temurin:21-jre
-
-WORKDIR /app
-
-COPY --from=build /app/target/*.jar app.jar
+ENTRYPOINT ["java", "-jar", "financeiro-0.0.1-SNAPSHOT.jar"]
 
 EXPOSE 8080
-
-ENTRYPOINT ["java","-jar","app.jar"]
